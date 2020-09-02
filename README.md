@@ -31,10 +31,10 @@ The user will be prompted for the following information:
 After all of the prompts are complete, the user will receive a message confirming that the html file was created and reminding the user of its location. At this point, it's ready to be viewed in the browser locally, deployed to your intranet, or uploaded to a webserver.
 
 Screenshot of the completed questions:<br>
-<img src="screenshots/user-questions.jpg" width="300px">
+<img src="screenshots/user-questions.jpg" width="700px">
 
 Screenshot of the rendered HTML page:<br>
-<img src="screenshots/rendered-page.jpg" width="300px">
+<img src="screenshots/rendered-page.jpg" width="700px">
 
 [Video demonstration (on Google Drive)](https://drive.google.com/file/d/1q5aIhR47iLMveRm_f0OlssGmyG31W3qg/view):  
 https://drive.google.com/file/d/1q5aIhR47iLMveRm_f0OlssGmyG31W3qg/view
@@ -44,7 +44,7 @@ Submit bug and feature requests as issues through the GitHub repo.
 
 ## Tests
 Unit tests conducted using [jest](https://jestjs.io/). Screenshot of the unit test results:<br>
-<img src="screenshots/test-results.jpg" width="300px">
+<img src="screenshots/test-results.jpg" width="700px">
 
 ## License
 This app can be used under the terms of the MIT license.
