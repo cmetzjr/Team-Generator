@@ -10,26 +10,130 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+// code to use inquirer to gather information about the development team members,
+const questions = [{
+        type: "list",
+        name: "role",
+        message: "Select employee role:",
+        choices: ["Manager", "Engineer", "Intern"]
+    },
+    {
+        type: "input",
+        name: "name",
+        message: "Employee name:"
+    },
+    {
+        type: "input",
+        name: "id",
+        message: "Employee ID:"
+    },
+    {
+        type: "input",
+        name: "email",
+        message: "Employee email:"
+    },
+    {
+        type: "input",
+        name: "officeNumber",
+        message: "Manager's office number:",
+        when: function (questions) {
+            return questions.role === "Manager"
+        }
+    },
+    {
+        type: "input",
+        name: "gitHub",
+        message: "Engineer's GitHub username:",
+        when: function (questions) {
+            return questions.role === "Engineer"
+        }
+    },
+    {
+        type: "input",
+        name: "school",
+        message: "Intern's school name:",
+        when: function (questions) {
+            return questions.role === "Intern"
+        }
+    },
+    {
+        type: "list",
+        name: "another",
+        message: "Would you like to enter another employee?",
+        choices: ["YES", "NO"]
+    }
+]
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+const employees = [];
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+// objects for each team member (using the correct classes as blueprints!)
+function writeEmployeeObj(content) {
+    switch (content.role) {
+        case "Manager":
+            const manager = new Manager(
+                content.name,
+                content.id,
+                content.email,
+                content.officeNumber,
+            )
+            employees.push(manager);
+            break;
+        case "Engineer":
+            const engineer = new Engineer(
+                content.name,
+                content.id,
+                content.email,
+                content.gitHub,
+            )
+            employees.push(engineer);
+            break;
+        case "Intern":
+            const intern = new Intern(
+                content.name,
+                content.id,
+                content.email,
+                content.school,
+            )
+            employees.push(intern);
+            break;
+    }
+}
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
+//call inquirer to begin prompting the user
+function init() {
+    inquirer.prompt(questions).then(
+        (data => {
+            console.log(data)
+            //if user wants to add another employee, then prompt questions again, else renter the html
+            if (data.another === "YES") {
+                writeEmployeeObj(data);
+                init();
+                console.log("employees:" + employees)
+            } else {
+                writeEmployeeObj(data);
+                const html = render(employees);
+                //check if output exists, create if not
+                if (fs.existsSync('./output')) {
+                    fs.writeFile(outputPath, html, function (err) {
+                        if (err) {
+                            return console.log(err);
+                        }
+                        console.log("Success! The team members are: " + employees);
+                    })
+                } else {
+                    fs.mkdir('./output', (err) => {
+                        if (err) throw err;
+                    });
+                    fs.writeFile(outputPath, html, function (err) {
+                        if (err) {
+                            return console.log(err);
+                        }
+                        console.log("Success! The team members are: " + employees);
+                    })
+                }
+            }
+        })
+    )
+}
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+init();
