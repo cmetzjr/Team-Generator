@@ -103,10 +103,12 @@ function writeEmployeeObj(content) {
 function init() {
     inquirer.prompt(questions).then(
         (data => {
+            console.log(data)
             //if user wants to add another employee, then prompt questions again, else renter the html
             if (data.another === "YES") {
                 writeEmployeeObj(data);
                 init();
+                console.log("employees:" + employees)
             } else {
                 writeEmployeeObj(data);
                 const html = render(employees);
@@ -116,7 +118,7 @@ function init() {
                         if (err) {
                             return console.log(err);
                         }
-                        console.log("Success! The team members were added. The rendered HTML page can be found at ./output/team.html");
+                        console.log("Success! The team members are: " + employees);
                     })
                 } else {
                     fs.mkdir('./output', (err) => {
@@ -126,7 +128,7 @@ function init() {
                         if (err) {
                             return console.log(err);
                         }
-                        console.log("Success! The team members were added. The rendered HTML page can be found at ./output/team.html");
+                        console.log("Success! The team members are: " + employees);
                     })
                 }
             }
